@@ -1,0 +1,7 @@
+mutation UpdateTodo($id: ID) {
+  updateTodo (id: $id) {
+    id
+    title
+    completed
+  }
+}

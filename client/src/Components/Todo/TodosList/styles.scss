@@ -1,0 +1,33 @@
+.todo-item {
+  margin-bottom: 1rem;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+
+  i {
+    cursor: pointer;
+  }
+
+  label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background-color: #f3f3f3;
+
+    i {
+      z-index: 2;
+    }
+
+    span {
+      color: black;
+    }
+  }
+
+  &.completed {
+    span {
+      text-decoration: line-through;
+      color: grey;
+    }
+  }
+}
