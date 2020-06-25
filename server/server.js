@@ -33,6 +33,7 @@ const root = {
             const todo = allTodos.find(({id}) => params.id === id);
             todo.completed = !todo.completed;
             return allTodos;
+            // return todo;
         },
 
         removeTodo: params => {

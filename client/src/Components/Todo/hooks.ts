@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useMutation, useQuery } from '@apollo/react-hooks';
 import { loader } from 'graphql.macro';
 
-import { CashDataType, UseTodosType } from './types';
+import { CashDataType, TodoType, UseTodosType } from './types';
 
 const getAllTodosSchema = loader('./Schemas/GetAllTodos.graphql');
 const addTodoSchema = loader('./Schemas/AddTodo.graphql');
@@ -29,7 +29,11 @@ export const useTodos = (setTodos): UseTodosType => {
 
   useEffect(() => {
     if (updatedTodos) {
-      setTodos(updatedTodos.updateTodo)
+      // console.log('--updatedTodos.updateTodo--', updatedTodos.updateTodo);
+      setTodos(prevState => {
+        // console.log('----', prevState);
+        return [...updatedTodos.updateTodo];
+      })
     };
   }, [updatedTodos, setTodos]);
 
@@ -59,9 +63,32 @@ export const useTodos = (setTodos): UseTodosType => {
           addTodo: [addTodo, ...data.getAllTodos]
         }});
       }
+
     });
   };
-  const handleComplete = (id: string) => () => checkTodo({ variables: { id } });
+  const handleComplete = (todo: TodoType) => () => {
+    const { id, title, completed } = todo;
+    checkTodo({
+      variables: { id },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updateTodo: {
+          __typename: 'Todo',
+          id,
+          title,
+          completed: !completed
+        }
+      },
+      update: (proxy, { data: { updateTodo } }) => {
+        const data: CashDataType = proxy.readQuery({ query: getAllTodosSchema });
+        // const todo = data.getAllTodos.find(({ id }) => id === updateTodo.id);
+        // console.log('--update todo--', todo);
+        proxy.writeQuery({ query: addTodoSchema, data: {
+          addTodo: [...updateTodo]
+        }});
+      }
+    })
+  };
   const handleRemove = (id: string) => () => removeTodo({ variables: { id } });
 
   return {
