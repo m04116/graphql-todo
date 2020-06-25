@@ -10,7 +10,7 @@ const getAllTodosSchema = loader('./Schemas/GetAllTodos.graphql');
 
 const Todo: React.FC = () => {
   const { data = {getAllTodos: []}, loading, error } = useQuery(getAllTodosSchema);
-  const { handleAddTodo, handleComplete, handleRemove } = useTodos(data);
+  const { handleAddTodo, handleComplete, handleRemove } = useTodos();
 
   return (
     <div className="container">

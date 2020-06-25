@@ -8,7 +8,7 @@ const addTodoSchema = loader('./Schemas/AddTodo.graphql');
 const updateTodoSchema = loader('./Schemas/UpdateTodo.graphql');
 const removeTodoSchema = loader('./Schemas/RemoveTodo.graphql');
 
-export const useTodos = (data): UseTodosType => {
+export const useTodos = (): UseTodosType => {
   const [ addTodo ] = useMutation(addTodoSchema);
   const [ checkTodo ] = useMutation(updateTodoSchema);
   const [ removeTodo ] = useMutation(removeTodoSchema);
