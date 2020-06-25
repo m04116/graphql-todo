@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { useMutation, useQuery } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { loader } from 'graphql.macro';
 
 import { CashDataType, UseTodosType } from './types';
@@ -9,18 +8,10 @@ const addTodoSchema = loader('./Schemas/AddTodo.graphql');
 const updateTodoSchema = loader('./Schemas/UpdateTodo.graphql');
 const removeTodoSchema = loader('./Schemas/RemoveTodo.graphql');
 
-export const useTodos = (setTodos): UseTodosType => {
-  const { data = {getAllTodos: []}, loading, error } = useQuery(getAllTodosSchema);
+export const useTodos = (data): UseTodosType => {
   const [ addTodo ] = useMutation(addTodoSchema);
   const [ checkTodo ] = useMutation(updateTodoSchema);
   const [ removeTodo ] = useMutation(removeTodoSchema);
-
-
-  useEffect(() => {
-    if (!loading && !error) {
-      setTodos(data.getAllTodos);
-    }
-  }, [data.getAllTodos, loading, error, setTodos]);
 
   const handleAddTodo = (title: string) => {
     addTodo({
@@ -37,7 +28,6 @@ export const useTodos = (setTodos): UseTodosType => {
 
       update: (proxy, { data: { addTodo } }) => {
         const data: CashDataType = proxy.readQuery({ query: getAllTodosSchema });
-        setTodos([addTodo, ...data.getAllTodos]);
         proxy.writeQuery({ query: getAllTodosSchema, data: {
           getAllTodos: [addTodo, ...data.getAllTodos],
         }});
@@ -49,7 +39,6 @@ export const useTodos = (setTodos): UseTodosType => {
     checkTodo({
       variables: { id },
       update: (proxy, { data: { updateTodo } }) => {
-        setTodos(updateTodo);
         proxy.writeQuery({ query: getAllTodosSchema, data: {
             getAllTodos: updateTodo
         }});
@@ -60,7 +49,6 @@ export const useTodos = (setTodos): UseTodosType => {
     removeTodo({
       variables: { id },
       update: (proxy, { data: { removeTodo } }) => {
-        setTodos(removeTodo);
         proxy.writeQuery({ query: getAllTodosSchema, data: {
             getAllTodos: removeTodo
           }});
@@ -70,8 +58,6 @@ export const useTodos = (setTodos): UseTodosType => {
 
   return {
     addTodo,
-    error,
-    loading,
     handleAddTodo,
     handleComplete,
     handleRemove,
