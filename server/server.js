@@ -21,19 +21,19 @@ const root = {
         },
 
         addTodo: params => {
-            allTodos.unshift({
+            const todo = {
                 id: nanoid(),
                 completed: false,
                 ...params.todo
-            });
-            return allTodos;
+            };
+            allTodos.unshift(todo);
+            return todo;
         },
 
         updateTodo: params => {
             const todo = allTodos.find(({id}) => params.id === id);
             todo.completed = !todo.completed;
             return allTodos;
-            // return todo;
         },
 
         removeTodo: params => {

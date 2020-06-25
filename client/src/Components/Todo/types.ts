@@ -11,7 +11,6 @@ export type CashDataType = {
 }
 
 export type HandleAddTodo = (title: string) => void;
-export type HandleComplete = (todo: TodoType) => () => void;
 export type HandleHelper = (id: string) => () => void;
 
 export type UseTodosType = {
@@ -19,6 +18,6 @@ export type UseTodosType = {
   error: ApolloError;
   loading: boolean;
   handleAddTodo: HandleAddTodo;
-  handleComplete: HandleComplete;
+  handleComplete: HandleHelper;
   handleRemove: HandleHelper;
 }
