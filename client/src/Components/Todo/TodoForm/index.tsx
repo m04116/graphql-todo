@@ -12,8 +12,10 @@ export const TodoForm: React.FC<Props> = ({ handleAddTodo }) => {
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => setTitle(target.value);
   const handleSubmit = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    handleAddTodo(title);
-    setTitle('');
+    if (title) {
+      handleAddTodo(title);
+      setTitle('');
+    }
   };
 
   return (

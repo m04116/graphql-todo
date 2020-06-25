@@ -14,7 +14,7 @@ type Props = {
 export const TodosList: React.FC<Props> = ({ handleComplete, handleRemove, todos }): JSX.Element => {
   const renderTodosList = todos.map(todo => (
     <li key={todo.id} className={cx("todo-item", "px1", {completed: todo.completed})}>
-      <label>
+      <label className="px1">
         <input type="checkbox" checked={todo.completed} onChange={handleComplete(todo.id)}/>
         <span>{todo.title}</span>
       </label>
