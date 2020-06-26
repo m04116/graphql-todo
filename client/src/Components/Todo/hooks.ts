@@ -1,7 +1,8 @@
+import { useCallback } from 'react';
 import { useMutation } from '@apollo/react-hooks';
 import { loader } from 'graphql.macro';
 
-import { CashDataType, UseTodosType } from './types';
+import { AllTodosType, UseTodosType } from './types';
 
 const getAllTodosSchema = loader('./Schemas/GetAllTodos.graphql');
 const addTodoSchema = loader('./Schemas/AddTodo.graphql');
@@ -13,7 +14,7 @@ export const useTodos = (): UseTodosType => {
   const [ checkTodo ] = useMutation(updateTodoSchema);
   const [ removeTodo ] = useMutation(removeTodoSchema);
 
-  const handleAddTodo = (title: string) => {
+  const handleAddTodo = useCallback((title: string) => {
     addTodo({
       variables: { todo: { title }},
       optimisticResponse: {
@@ -27,15 +28,15 @@ export const useTodos = (): UseTodosType => {
       },
 
       update: (proxy, { data: { addTodo } }) => {
-        const data: CashDataType = proxy.readQuery({ query: getAllTodosSchema });
+        const data: AllTodosType = proxy.readQuery({ query: getAllTodosSchema });
         proxy.writeQuery({ query: getAllTodosSchema, data: {
           getAllTodos: [addTodo, ...data.getAllTodos],
         }});
       }
 
     });
-  };
-  const handleComplete = (id: string) => () => {
+  }, []);
+  const handleComplete = useCallback((id: string) => () => {
     checkTodo({
       variables: { id },
       update: (proxy, { data: { updateTodo } }) => {
@@ -44,8 +45,8 @@ export const useTodos = (): UseTodosType => {
         }});
       }
     })
-  };
-  const handleRemove = (id: string) => () => {
+  }, []);
+  const handleRemove = useCallback((id: string) => () => {
     removeTodo({
       variables: { id },
       update: (proxy, { data: { removeTodo } }) => {
@@ -54,7 +55,7 @@ export const useTodos = (): UseTodosType => {
           }});
       }
     })
-  };
+  }, []);
 
   return {
     addTodo,

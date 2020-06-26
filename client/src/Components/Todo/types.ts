@@ -1,10 +1,12 @@
+import { ApolloError } from 'apollo-client';
+
 export type TodoType = {
   id: string;
   title: string;
   completed: boolean;
 };
 
-export type CashDataType = {
+export type AllTodosType = {
   getAllTodos: Array<TodoType>;
 }
 
@@ -16,4 +18,10 @@ export type UseTodosType = {
   handleAddTodo: HandleAddTodo;
   handleComplete: HandleHelper;
   handleRemove: HandleHelper;
+}
+
+export type GetAllTodos = {
+  data: AllTodosType;
+  loading: boolean;
+  error: ApolloError;
 }
